@@ -14,3 +14,7 @@ bucket_name   = "terraform-stage-dev-eks-2026"
 location      = "asia-south1"
 storage_class = "STANDARD"
 environment   = "dev-env"
+
+# Subnet 
+subnetwork_name          = "private-subnet"
+subnetwork_ip_cidr_range = "10.10.0.0/16"
