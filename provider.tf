@@ -6,6 +6,11 @@ terraform {
       version = "~> 6.0.0"
     }
   }
+
+  backend "gcs" {
+    bucket = "terraform-stage-dev-eks-2026"
+    prefix = "terraform/state"
+  }
 }
 
 provider "google" {
