@@ -65,8 +65,3 @@ variable "subnetwork_ip_cidr_range" {
   type        = string
   description = "Subnetwork IP CIDR Range"
 }
-
-# variable "region_name" {
-#     type = string 
-#     description = "Subnetwork region"
-# }
