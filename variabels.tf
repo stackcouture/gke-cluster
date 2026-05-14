@@ -84,3 +84,24 @@ variable "allow_gke_rule_name" {
   description = "GKE Firewall Rule name"
   default     = null
 }
+
+# GKE variables
+variable "initial_node_count" {
+  type        = number
+  description = "Initial Node Count"
+}
+
+variable "deletion_protection" {
+  type        = bool
+  description = "Deleteion Protection"
+}
+
+variable "remove_default_node_pool" {
+  type        = bool
+  description = "Default Node Pool Remove"
+}
+
+variable "location_name" {
+  type        = string
+  description = "Location Name"
+}

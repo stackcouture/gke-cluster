@@ -29,3 +29,14 @@ module "firewall" {
   allow_gke_rule_name               = var.allow_gke_rule_name
   subnetwork_ip_cidr_range          = var.subnetwork_ip_cidr_range
 }
+
+module "gke" {
+  source = "./modules/gke"
+  # region_name              = var.region_name
+  compute_network_name     = module.vpc.vpc_name        # var.compute_network_name
+  compute_subnetwork_name  = module.subnets.subnet_name # var.compute_subnetwork_name
+  initial_node_count       = var.initial_node_count
+  deletion_protection      = var.deletion_protection
+  remove_default_node_pool = var.remove_default_node_pool
+  location_name            = var.location_name
+}
