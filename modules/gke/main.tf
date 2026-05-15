@@ -29,21 +29,73 @@ resource "google_container_cluster" "demo_cluster" {
   monitoring_service = "monitoring.googleapis.com/kubernetes"
 }
 
-resource "google_container_node_pool" "primary_nodes" {
-  name = "primary-node-pool"
+# resource "google_container_node_pool" "primary_nodes" {
+#   name = "primary-node-pool"
 
+#   project  = google_container_cluster.demo_cluster.project
+#   cluster  = google_container_cluster.demo_cluster.name
+#   location = google_container_cluster.demo_cluster.location
+
+#   node_count = 1
+
+#   node_config {
+#     image_type   = "UBUNTU_CONTAINERD"
+#     machine_type = "e2-medium"
+
+#     disk_type    = "pd-standard"
+#     disk_size_gb = 20
+
+#     oauth_scopes = [
+#       "https://www.googleapis.com/auth/cloud-platform"
+#     ]
+
+#     metadata = {
+#       disable-legacy-endpoints = "true"
+#     }
+
+#     labels = {
+#       env = "dev"
+#     }
+
+#     tags = ["gke-node"]
+#   }
+
+#   autoscaling {
+#     min_node_count = 1
+#     max_node_count = 2
+#   }
+
+#   management {
+#     auto_repair  = true
+#     auto_upgrade = true
+#   }
+
+# }
+
+resource "google_container_node_pool" "general_pool" {
+  name     = "general-pool"
   project  = google_container_cluster.demo_cluster.project
   cluster  = google_container_cluster.demo_cluster.name
   location = google_container_cluster.demo_cluster.location
 
-  node_count = 1
+  node_count = 2
+
+  autoscaling {
+    min_node_count = 2
+    max_node_count = 4
+  }
+
+  management {
+    auto_repair  = true
+    auto_upgrade = true
+  }
 
   node_config {
     image_type   = "UBUNTU_CONTAINERD"
-    machine_type = "e2-medium"
+    machine_type = "e2-standard-4"
 
-    disk_type    = "pd-standard"
-    disk_size_gb = 20
+    disk_type    = "pd-balanced"
+    disk_size_gb = 50
 
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -54,11 +106,21 @@ resource "google_container_node_pool" "primary_nodes" {
     }
 
     labels = {
-      env = "dev"
+      nodepool = "general"
+      env      = "dev"
     }
 
-    tags = ["gke-node"]
+    tags = ["general-node-pool"]
   }
+}
+
+resource "google_container_node_pool" "stateful_pool" {
+  name     = "stateful-pool"
+  project  = google_container_cluster.demo_cluster.project
+  cluster  = google_container_cluster.demo_cluster.name
+  location = google_container_cluster.demo_cluster.location
+
+  node_count = 1
 
   autoscaling {
     min_node_count = 1
@@ -70,4 +132,32 @@ resource "google_container_node_pool" "primary_nodes" {
     auto_upgrade = true
   }
 
+  node_config {
+    image_type   = "UBUNTU_CONTAINERD"
+    machine_type = "e2-standard-4"
+
+    disk_type    = "pd-ssd"
+    disk_size_gb = 100
+
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+
+    metadata = {
+      disable-legacy-endpoints = "true"
+    }
+
+    labels = {
+      workload = "stateful"
+      env      = "dev"
+    }
+
+    taint {
+      key    = "workload"
+      value  = "stateful"
+      effect = "NO_SCHEDULE"
+    }
+
+    tags = ["stateful-node-pool"]
+  }
 }
