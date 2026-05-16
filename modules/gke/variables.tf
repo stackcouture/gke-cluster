@@ -37,3 +37,8 @@ variable "sa_node_email" {
   type        = string
   description = "SA Node Email"
 }
+
+variable "project_id" {
+  type        = string
+  description = "Project Id"
+}

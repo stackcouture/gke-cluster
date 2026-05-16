@@ -1,3 +1,5 @@
+data "google_client_config" "current" {}
+
 module "gcs" {
   source        = "./modules/gcs_bucket"
   bucket_name   = var.bucket_name
@@ -30,8 +32,6 @@ module "firewall" {
   subnetwork_ip_cidr_range          = var.subnetwork_ip_cidr_range
 }
 
-data "google_client_config" "current" {}
-
 module "sa" {
   source     = "./modules/sa"
   project_id = data.google_client_config.current.project
@@ -46,4 +46,5 @@ module "gke" {
   deletion_protection      = var.deletion_protection
   remove_default_node_pool = var.remove_default_node_pool
   location_name            = var.location_name
+  project_id               = data.google_client_config.current.project
 }

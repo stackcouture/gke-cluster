@@ -1,8 +1,8 @@
-data "google_client_config" "current" {}
+# data "google_client_config" "current" {}
 
 resource "google_container_cluster" "demo_cluster" {
-  project  = data.google_client_config.current.project
-  name     = "${data.google_client_config.current.project}-gke"
+  project  = var.project_id
+  name     = "${var.project_id}-gke"
   location = var.location_name
 
   deletion_protection = var.deletion_protection # false
@@ -20,7 +20,7 @@ resource "google_container_cluster" "demo_cluster" {
   }
 
   workload_identity_config {
-    workload_pool = "${data.google_client_config.current.project}.svc.id.goog"
+    workload_pool = "${var.project_id}.svc.id.goog"
   }
 
   network_policy {
