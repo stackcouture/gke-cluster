@@ -32,3 +32,8 @@ variable "location_name" {
   type        = string
   description = "Location Name"
 }
+
+variable "sa_node_email" {
+  type        = string
+  description = "SA Node Email"
+}

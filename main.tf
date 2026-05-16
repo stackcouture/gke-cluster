@@ -30,11 +30,18 @@ module "firewall" {
   subnetwork_ip_cidr_range          = var.subnetwork_ip_cidr_range
 }
 
+data "google_client_config" "current" {}
+
+module "sa" {
+  source     = "./modules/sa"
+  project_id = data.google_client_config.current.project
+}
+
 module "gke" {
-  source = "./modules/gke"
-  # region_name              = var.region_name
+  source                   = "./modules/gke"
   compute_network_name     = module.vpc.vpc_name        # var.compute_network_name
   compute_subnetwork_name  = module.subnets.subnet_name # var.compute_subnetwork_name
+  sa_node_email            = module.sa.sa_email         # google_service_account.gke_nodes.email
   initial_node_count       = var.initial_node_count
   deletion_protection      = var.deletion_protection
   remove_default_node_pool = var.remove_default_node_pool

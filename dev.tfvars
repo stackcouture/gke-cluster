@@ -26,4 +26,5 @@ allow_gke_rule_name               = "gke-firewall-rule"
 initial_node_count       = 1
 deletion_protection      = false
 remove_default_node_pool = true
-location_name            = "asia-south1"
+# location_name            = "asia-south1"
+location_name = "asia-south1-a"

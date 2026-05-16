@@ -23,6 +23,22 @@ resource "google_container_cluster" "demo_cluster" {
     workload_pool = "${data.google_client_config.current.project}.svc.id.goog"
   }
 
+  network_policy {
+    enabled = true
+  }
+
+  addons_config {
+    network_policy_config {
+      disabled = false
+    }
+  }
+
+  private_cluster_config {
+    enable_private_nodes    = true
+    enable_private_endpoint = false
+    master_ipv4_cidr_block  = "172.16.0.0/28"
+  }
+
   enable_shielded_nodes = true
 
   logging_service    = "logging.googleapis.com/kubernetes"
@@ -54,8 +70,11 @@ resource "google_container_node_pool" "general_pool" {
     disk_type    = "pd-balanced"
     disk_size_gb = 30
 
+    service_account = var.sa_node_email
+
     oauth_scopes = [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring"
     ]
 
     metadata = {
