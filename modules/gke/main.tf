@@ -31,6 +31,10 @@ resource "google_container_cluster" "demo_cluster" {
     network_policy_config {
       disabled = false
     }
+
+    gce_persistent_disk_csi_driver_config {
+      enabled = true
+    }
   }
 
   private_cluster_config {
